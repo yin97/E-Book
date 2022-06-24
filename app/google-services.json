@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "306697862826",
+    "project_id": "e-book-b7391",
+    "storage_bucket": "e-book-b7391.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306697862826:android:f2d4efc0106c0e1a061ad3",
+        "android_client_info": {
+          "package_name": "com.theairsoft.e_book"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306697862826-uke6ip2k7p4co2ak0tslgcrobtp7vgn8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTPzIV4P3Sdjts_V6vJ1xy6Fs07Yyafrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306697862826-uke6ip2k7p4co2ak0tslgcrobtp7vgn8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
