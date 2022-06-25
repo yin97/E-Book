@@ -1,4 +1,4 @@
-package com.theairsoft.e_book
+package com.theairsoft.e_book.ui.enter
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
+import com.theairsoft.e_book.R
 import com.theairsoft.e_book.databinding.FragmentFirstScreenBinding
 
 class FirstScreenFragment(

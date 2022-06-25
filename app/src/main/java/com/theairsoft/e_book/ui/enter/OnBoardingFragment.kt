@@ -1,4 +1,4 @@
-package com.theairsoft.e_book
+package com.theairsoft.e_book.ui.enter
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayoutMediator
+import com.theairsoft.e_book.ScreenSlidePagerAdapter
 import com.theairsoft.e_book.databinding.FragmentOnBoardingBinding
 
 class OnBoardingFragment : Fragment() {

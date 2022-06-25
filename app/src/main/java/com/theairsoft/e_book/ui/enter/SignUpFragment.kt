@@ -1,4 +1,4 @@
-package com.theairsoft.e_book
+package com.theairsoft.e_book.ui.enter
 
 import android.content.Intent
 import android.graphics.Color
@@ -6,10 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.theairsoft.e_book.*
+import com.theairsoft.e_book.database.UserEntity
 import com.theairsoft.e_book.databinding.FragmentSignUpBinding
+import kotlinx.coroutines.*
 
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
@@ -19,62 +24,80 @@ class SignUpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
-
+        binding.etPhone.setMaskOn(activity = activity)
         binding.icBack.setOnClickListener {
             findNavController().popBackStack()
         }
-
-        binding.etCode.addTextChangedListener {
-            if (validateSender("Fill in the field")) {
-                binding.btnSignUp.isEnabled = true
-                binding.btnSignUp.setTextColor(Color.WHITE)
-            }
-        }
         binding.etEmail.addTextChangedListener {
-            if (validateSender("Fill in the field")) {
+            if (validateSender()) {
                 binding.btnSignUp.isEnabled = true
                 binding.btnSignUp.setTextColor(Color.WHITE)
             }
         }
 
         binding.etFirst.addTextChangedListener {
-            if (validateSender("Fill in the field")) {
+            if (validateSender()) {
                 binding.btnSignUp.isEnabled = true
                 binding.btnSignUp.setTextColor(Color.WHITE)
             }
         }
 
         binding.etPhone.addTextChangedListener {
-            if (validateSender("Fill in the field")) {
+            if (validateSender()) {
                 binding.btnSignUp.isEnabled = true
                 binding.btnSignUp.setTextColor(Color.WHITE)
             }
         }
 
         binding.etPassword.addTextChangedListener {
-            if (validateSender("Fill in the field")) {
+            if (validateSender()) {
                 binding.btnSignUp.isEnabled = true
                 binding.btnSignUp.setTextColor(Color.WHITE)
             }
         }
+
+        binding.checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (validateSender()) {
+                binding.btnSignUp.isEnabled = true
+                binding.btnSignUp.setTextColor(Color.WHITE)
+            }
+        }
+
         binding.btnSignUp.setOnClickListener {
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
+            insertUserData()
         }
 
         return binding.root
     }
 
+    private fun insertUserData() {
+        val email = binding.etEmail.text.toString()
+        val phone = binding.etPhone.getMaskedPhoneWithoutSpace()
+        val password = binding.etPassword.text.toString()
+        val name = binding.etFirst.text.toString()
 
-    private fun validateSender(
-        errorMessage: String,
-    ): Boolean {
-        if (binding.etCode.text?.trim()?.length == 0) {
-            binding.etCode.error = errorMessage
-            return false
+        val user = UserEntity(
+            id = null,
+            name = name,
+            email = email,
+            mobilePhone = phone,
+            password = password
+        )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            (requireActivity() as StartActivity).let {
+                it.viewModel.apply {
+                    checkData(user, this@SignUpFragment)
+                }
+            }
+
         }
+    }
+
+
+    private fun validateSender(): Boolean {
+        val errorMessage = "Fill in the field"
         if (binding.etEmail.text?.trim()?.length == 0) {
             binding.etEmail.error = errorMessage
             return false
@@ -89,6 +112,10 @@ class SignUpFragment : Fragment() {
         }
         if (binding.etPhone.text?.trim()?.length == 0) {
             binding.etPhone.error = errorMessage
+            return false
+        }
+        if (!binding.checkbox.isChecked) {
+            binding.checkbox.error = "Please, check this"
             return false
         }
 

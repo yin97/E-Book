@@ -1,5 +1,6 @@
 package com.theairsoft.e_book
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
@@ -8,6 +9,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.theairsoft.e_book.databinding.ActivityMainBinding
+import com.theairsoft.e_book.ui.enter.StartActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +20,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         changeColorStatusBar(true)
+        if (!SharedPrefs(this).isNotFirstTime) {
+            startActivity(Intent(this, StartActivity::class.java))
+            finish()
+        }
 
         val navView: BottomNavigationView = binding.navView
 

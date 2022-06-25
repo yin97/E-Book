@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".SignUpFragment">
+    tools:context=".ui.enter.SignUpFragment">
 
     <ImageView
         android:id="@+id/ic_back"
@@ -100,28 +100,7 @@
                     android:hint="Mobile Phone"
                     android:inputType="number"
                     android:maxLines="1"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:textColor="@color/black" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/ll_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/edit_text_background"
-                app:layout_constraintTop_toBottomOf="@id/ll_phone">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/et_code"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:background="@null"
-                    android:hint="Group Special Code (optional)"
-                    android:inputType="number"
-                    android:maxLines="1"
+                    android:digits="0123456789-+ "
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:textColor="@color/black" />
@@ -134,7 +113,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/edit_text_background"
-                app:layout_constraintTop_toBottomOf="@id/ll_code">
+                app:layout_constraintTop_toBottomOf="@id/ll_phone">
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/et_password"
@@ -144,6 +123,7 @@
                     android:hint="Password"
                     android:inputType="textPassword"
                     android:maxLines="1"
+                    android:maxLength="4"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:textColor="@color/black" />

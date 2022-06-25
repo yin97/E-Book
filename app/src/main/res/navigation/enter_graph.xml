@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/onBoardingFragment"
-        android:name="com.theairsoft.e_book.OnBoardingFragment"
+        android:name="com.theairsoft.e_book.ui.enter.OnBoardingFragment"
         android:label="fragment_on_boarding"
         tools:layout="@layout/fragment_on_boarding">
         <action
@@ -28,12 +28,12 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.theairsoft.e_book.SignInFragment"
+        android:name="com.theairsoft.e_book.ui.enter.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" />
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.theairsoft.e_book.SignUpFragment"
+        android:name="com.theairsoft.e_book.ui.enter.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
 </navigation>
