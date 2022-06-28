@@ -11,9 +11,14 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.map
 import com.google.android.material.snackbar.Snackbar
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
+import com.theairsoft.e_book.di.Resource
+import kotlinx.coroutines.Dispatchers
 
 fun Activity.changeColorStatusBar(isChange: Boolean) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -72,3 +77,23 @@ fun EditText.getMaskedPhoneWithoutSpace(): String {
         phone = phone.substring(1, phone.length)
     return phone.replace(" ", "").replace("-", "").removeRange(0, 3)
 }
+
+fun <T, A> performGetOperation(
+    databaseQuery: () -> LiveData<T>,
+    networkCall: suspend () -> Resource<A>,
+    saveCallResult: suspend (A) -> Unit
+): LiveData<Resource<T>> =
+    liveData(Dispatchers.IO) {
+        emit(Resource.loading())
+        val source = databaseQuery.invoke().map { Resource.success(it) }
+        emitSource(source)
+
+        val responseStatus = networkCall.invoke()
+        if (responseStatus.status == Resource.Status.SUCCESS) {
+            saveCallResult(responseStatus.data!!)
+
+        } else if (responseStatus.status == Resource.Status.ERROR) {
+            emit(Resource.error(responseStatus.message!!))
+            emitSource(source)
+        }
+    }

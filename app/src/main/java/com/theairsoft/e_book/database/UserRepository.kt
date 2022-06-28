@@ -1,7 +1,5 @@
 package com.theairsoft.e_book.database
 
-import androidx.lifecycle.LiveData
-
 class UserRepository(
     private val userDatabase: UserDatabase
 ) {

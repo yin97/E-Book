@@ -2,6 +2,7 @@ package com.theairsoft.e_book.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,11 @@ import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.theairsoft.e_book.HomeViewModel
 import com.theairsoft.e_book.PdfReaderActivity
 import com.theairsoft.e_book.databinding.FragmentHomeBinding
+import com.theairsoft.e_book.di.NewsViewModel
+import com.theairsoft.e_book.di.Resource
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -64,6 +69,7 @@ class HomeFragment : Fragment() {
     private val itemAdapterGenres = ItemAdapter<Genres>()
     private val fastItemAdapterGenres = FastAdapter.with(itemAdapterGenres)
     private val vm: HomeViewModel by activityViewModels()
+    private val viewModel: NewsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,6 +99,31 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.listRecently.adapter = fastItemAdapterRecently
 
+        viewModel.books.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Resource.Status.SUCCESS -> {
+//                    progress_bar.visibility = View.GONE
+                    if (!it.data.isNullOrEmpty()) {
+                        val list = ArrayList(it.data)
+                        val books = ArrayList<BookData>()
+                        list.let {
+                            it.forEach { e ->
+                                books.add(e.toBookData())
+                            }
+                        }
+                        itemAdapter.clear()
+                        itemAdapter.add(books)
+                    }
+                }
+                Resource.Status.ERROR -> {
+                    Log.d("TAGRESULT", "onCreateView: ${it.message}")
+                }
+
+                Resource.Status.LOADING -> {
+//                    progress_bar.visibility = View.VISIBLE
+                }
+            }
+        }
 
         itemAdapterGenres.clear()
         itemAdapterGenres.add(Genres(0))

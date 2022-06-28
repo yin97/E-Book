@@ -31,10 +31,10 @@
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.17300724637681159" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.1911231884057971" />
         <entry key="app/src/main/res/layout/fragment_on_boarding.xml" value="0.20018115942028986" />
-        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.14336372847011145" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.226220703125" />
         <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.17300724637681159" />
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.20018115942028986" />
-        <entry key="app/src/main/res/layout/item_book.xml" value="0.17300724637681159" />
+        <entry key="app/src/main/res/layout/item_book.xml" value="0.3080063308494678" />
         <entry key="app/src/main/res/layout/item_genres.xml" value="0.20425724637681159" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.201" />

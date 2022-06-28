@@ -1,6 +1,5 @@
 package com.theairsoft.e_book.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao

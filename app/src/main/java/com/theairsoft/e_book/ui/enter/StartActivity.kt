@@ -9,9 +9,10 @@ import com.theairsoft.e_book.database.UserRepository
 import com.theairsoft.e_book.database.UserViewModel
 import com.theairsoft.e_book.database.UserViewModelFactory
 import com.theairsoft.e_book.databinding.ActivityStartBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 const val NUM_PAGES = 4
-
+@AndroidEntryPoint
 class StartActivity : AppCompatActivity() {
 
     private var _binding: ActivityStartBinding? = null

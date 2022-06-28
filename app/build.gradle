@@ -107,25 +107,30 @@ dependencies {
 
     implementation 'com.pdfview:pdfview-android:1.0.0'
 
-    def lifecycle_version = "2.2.0"
-    def room_version = "2.2.5"
 
-// Material Design
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // Material Design
     implementation 'com.google.android.material:material:1.6.1'
 
-// ViewModel and LiveData
+    // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
 
-// Android Room
+    // Android Room
     implementation "androidx.room:room-runtime:2.4.2"
     implementation "androidx.room:room-ktx:2.4.2"
     kapt "androidx.room:room-compiler:2.4.2"
 
-// optional - Kotlin Extensions and Coroutines support for Room
+    // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.4.2"
 
     // Mask
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.1.0'
     implementation 'com.redmadrobot:input-mask-android:6.0.0'
+
+    debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
 }
