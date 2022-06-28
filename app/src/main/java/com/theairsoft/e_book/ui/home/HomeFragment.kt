@@ -2,22 +2,21 @@ package com.theairsoft.e_book.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
-import com.theairsoft.e_book.HomeViewModel
-import com.theairsoft.e_book.PdfReaderActivity
+import com.theairsoft.e_book.*
 import com.theairsoft.e_book.databinding.FragmentHomeBinding
 import com.theairsoft.e_book.di.NewsViewModel
 import com.theairsoft.e_book.di.Resource
@@ -42,34 +41,48 @@ class HomeFragment : Fragment() {
             }
 
             override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
-                return viewHolder.itemView
+                return if (viewHolder is BookData.BookViewHolder) {
+                    viewHolder.itemView
+                } else {
+                    super.onBind(viewHolder)
+                }
             }
 
         })
 
-    private val itemAdapterRecently = ItemAdapter<BookData>()
-    private val fastItemAdapterRecently =
-        FastAdapter.with(itemAdapterRecently).addEventHook(object : ClickEventHook<BookData>() {
+    private val itemAdapterNews = ItemAdapter<NewsItem>()
+    private val fastItemAdapterNews =
+        FastAdapter.with(itemAdapterNews).addEventHook(object : ClickEventHook<NewsItem>() {
             override fun onClick(
                 v: View,
                 position: Int,
-                fastAdapter: FastAdapter<BookData>,
-                item: BookData
+                fastAdapter: FastAdapter<NewsItem>,
+                item: NewsItem
             ) {
-                val intent = Intent(requireContext(), PdfReaderActivity::class.java)
-                startActivity(intent)
+                val bundle = Bundle()
+                item.id?.let { bundle.putLong(NEWS_ID, it) }
+                findNavController().navigate(R.id.from_home_to_news_navigate, bundle)
             }
 
             override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
-                return viewHolder.itemView
+                return if (viewHolder is NewsItem.NewsViewHolder) {
+                    viewHolder.itemView
+                } else {
+                    super.onBind(viewHolder)
+                }
             }
 
         })
 
-    private val itemAdapterGenres = ItemAdapter<Genres>()
-    private val fastItemAdapterGenres = FastAdapter.with(itemAdapterGenres)
-    private val vm: HomeViewModel by activityViewModels()
     private val viewModel: NewsViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.apply {
+            getBooks(this@HomeFragment)
+            getNews(this@HomeFragment)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,60 +92,27 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        vm.addBooks()
-        vm.addRecentlyBooks()
 
         binding.listBestseller.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.listBestseller.adapter = fastItemAdapter
 
-        vm.books.observe(viewLifecycleOwner) {
+        val scale = resources.displayMetrics.density
+        val marginPixels = (16 * scale + 0.5f).toInt()
+        binding.listNews.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.listNews.itemAnimator = DefaultItemAnimator()
+        binding.listNews.adapter = fastItemAdapterNews
+        binding.listNews.addItemDecoration(SpacesItemDecoration(marginPixels, true, 2))
+
+        viewModel.books.observe(viewLifecycleOwner) { books ->
             itemAdapter.clear()
-            itemAdapter.add(it)
+            itemAdapter.add(books)
         }
 
-        binding.listGenres.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-        binding.listGenres.adapter = fastItemAdapterGenres
-
-        binding.listRecently.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-        binding.listRecently.adapter = fastItemAdapterRecently
-
-        viewModel.books.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Resource.Status.SUCCESS -> {
-//                    progress_bar.visibility = View.GONE
-                    if (!it.data.isNullOrEmpty()) {
-                        val list = ArrayList(it.data)
-                        val books = ArrayList<BookData>()
-                        list.let {
-                            it.forEach { e ->
-                                books.add(e.toBookData())
-                            }
-                        }
-                        itemAdapter.clear()
-                        itemAdapter.add(books)
-                    }
-                }
-                Resource.Status.ERROR -> {
-                    Log.d("TAGRESULT", "onCreateView: ${it.message}")
-                }
-
-                Resource.Status.LOADING -> {
-//                    progress_bar.visibility = View.VISIBLE
-                }
-            }
+        viewModel.news.observe(viewLifecycleOwner) { news ->
+            itemAdapterNews.clear()
+            itemAdapterNews.add(news)
         }
-
-        itemAdapterGenres.clear()
-        itemAdapterGenres.add(Genres(0))
-
-        vm.recently.observe(viewLifecycleOwner) {
-            itemAdapterRecently.clear()
-            itemAdapterRecently.add(it)
-        }
-
         return root
     }
 

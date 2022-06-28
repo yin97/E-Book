@@ -1,13 +1,12 @@
 package com.theairsoft.e_book
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,6 +18,15 @@ import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
 import com.theairsoft.e_book.di.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import java.text.SimpleDateFormat
+import java.util.*
+
+const val NEWS_ID = "NEWS_ID"
+const val USER_ID = "USER_ID"
 
 fun Activity.changeColorStatusBar(isChange: Boolean) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -79,21 +87,52 @@ fun EditText.getMaskedPhoneWithoutSpace(): String {
 }
 
 fun <T, A> performGetOperation(
-    databaseQuery: () -> LiveData<T>,
+    databaseQuery: () -> Flow<T>,
     networkCall: suspend () -> Resource<A>,
     saveCallResult: suspend (A) -> Unit
-): LiveData<Resource<T>> =
-    liveData(Dispatchers.IO) {
-        emit(Resource.loading())
-        val source = databaseQuery.invoke().map { Resource.success(it) }
-        emitSource(source)
+): Flow<Resource<T>> = flow {
+    emit(Resource.loading())
+    val source = databaseQuery.invoke().map { Resource.success(it) }.first()
+    emit(source)
 
-        val responseStatus = networkCall.invoke()
-        if (responseStatus.status == Resource.Status.SUCCESS) {
-            saveCallResult(responseStatus.data!!)
-
-        } else if (responseStatus.status == Resource.Status.ERROR) {
-            emit(Resource.error(responseStatus.message!!))
-            emitSource(source)
-        }
+    val responseStatus = networkCall.invoke()
+    if (responseStatus.status == Resource.Status.SUCCESS) {
+        saveCallResult(responseStatus.data!!)
+        emit(databaseQuery.invoke().map { Resource.success(it) }.first())
+    } else if (responseStatus.status == Resource.Status.ERROR) {
+        emit(Resource.error(responseStatus.message!!))
+        emit(databaseQuery.invoke().map { Resource.success(it) }.first())
     }
+}
+
+fun Fragment.getDialogProgressBar(): AlertDialog.Builder {
+    var builder: AlertDialog.Builder? = null
+
+    if (builder == null) {
+        builder = AlertDialog.Builder(this.requireContext())
+        val progressBar = ProgressBar(this.requireContext())
+        val lp: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        progressBar.layoutParams = lp
+        builder.setView(progressBar)
+    }
+    return builder
+}
+
+fun Date.getDateFormatter(): SimpleDateFormat {
+    val calendarDate = Calendar.getInstance().apply {
+        time = this@getDateFormatter
+    }
+
+    return if (calendarDate.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
+        SimpleDateFormat("d MMMM", Locale.ENGLISH)
+    } else {
+        SimpleDateFormat("d MMMM YYY", Locale.ENGLISH)
+    }
+}
+
+fun Date.toDisplayString(): String {
+    return this.getDateFormatter().format(this)
+}

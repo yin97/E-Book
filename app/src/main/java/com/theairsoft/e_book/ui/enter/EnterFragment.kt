@@ -35,24 +35,7 @@ class EnterFragment : Fragment() {
             findNavController().navigate(R.id.onboard_to_sign_up)
         }
 
-//        vm.news.observe(viewLifecycleOwner) {
-//            when (it.status) {
-//                Resource.Status.SUCCESS -> {
-////                    progress_bar.visibility = View.GONE
-//                    if (!it.data.isNullOrEmpty()) Log.d(
-//                        "TAGRESULT",
-//                        "onCreateView: ${it.data.size}"
-//                    )
-//                }
-//                Resource.Status.ERROR -> {
-//                    Log.d("TAGRESULT", "onCreateView: ${it.message}")
-//                }
-//
-//                Resource.Status.LOADING -> {
-////                    progress_bar.visibility = View.VISIBLE
-//                }
-//            }
-//        }
+
 
         return binding.root
     }

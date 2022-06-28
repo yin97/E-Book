@@ -1,6 +1,7 @@
 package com.theairsoft.e_book.di
 
 import com.theairsoft.e_book.database.NewsDao
+import com.theairsoft.e_book.database.UserEntity
 import com.theairsoft.e_book.performGetOperation
 import javax.inject.Inject
 
@@ -25,4 +26,13 @@ class NewsRepository @Inject constructor(
             }
         }
     )
+
+    fun getNews(id: Long) = localDataSource.getNews(id)
+
+    suspend fun insertUser(user: UserEntity) = localDataSource.insertUser(user)
+
+    fun getUserByPhone(phone: String) = localDataSource.getUserByLogin(phone)
+
+    fun getUserById(id: Int) = localDataSource.getUserById(id)
+
 }

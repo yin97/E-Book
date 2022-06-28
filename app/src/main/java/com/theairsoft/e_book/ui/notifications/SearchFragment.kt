@@ -20,10 +20,14 @@ import com.theairsoft.e_book.HomeViewModel
 import com.theairsoft.e_book.PdfReaderActivity
 import com.theairsoft.e_book.SpacesItemDecoration
 import com.theairsoft.e_book.databinding.FragmentNotificationsBinding
+import com.theairsoft.e_book.di.NewsViewModel
 import com.theairsoft.e_book.ui.home.BookData
+import com.theairsoft.e_book.ui.home.NewsItem
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentNotificationsBinding? = null
@@ -46,7 +50,9 @@ class SearchFragment : Fragment() {
             }
 
         })
-    private val vm: HomeViewModel by activityViewModels()
+    private val viewModel:NewsViewModel by activityViewModels()
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,7 +60,6 @@ class SearchFragment : Fragment() {
     ): View {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        vm.addBooks()
 
         binding.listSearch.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.listSearch.itemAnimator = DefaultItemAnimator()
@@ -68,7 +73,7 @@ class SearchFragment : Fragment() {
             if (it != null) {
                 if (it.toString().isNotEmpty()) {
                     itemAdapter.clear()
-                    itemAdapter.add((vm.books.value as ArrayList<BookData>).filter { e ->
+                    itemAdapter.add((viewModel.books.value as ArrayList<BookData>).filter { e ->
                         e.name?.lowercase(Locale.getDefault())?.contains(
                             it.toString()
                         ) ?: e.author?.lowercase(Locale.getDefault())?.contains(it.toString())

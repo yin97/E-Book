@@ -9,22 +9,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.theairsoft.e_book.MainActivity
 import com.theairsoft.e_book.databinding.FragmentSignInBinding
+import com.theairsoft.e_book.di.NewsViewModel
 import com.theairsoft.e_book.getMaskedPhoneWithoutSpace
 import com.theairsoft.e_book.setMaskOn
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.bind
 
-
+@AndroidEntryPoint
 class SignInFragment : Fragment() {
 
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
-
+    private val viewModel: NewsViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,11 +64,11 @@ class SignInFragment : Fragment() {
         val phone = binding.etPhone.getMaskedPhoneWithoutSpace()
         val password = binding.etPassword.text.toString()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            (requireActivity() as StartActivity).let {
-                it.viewModel.login(phone,password,this@SignInFragment)
-            }
+
+        viewModel.apply {
+            login(phone, password, this@SignInFragment)
         }
+
     }
 
     private fun validateSender(

@@ -7,7 +7,11 @@ import androidx.room.RoomDatabase
 
 const val DATABASE_NAME = "database"
 
-@Database(entities = [NewsLocal::class, BookEntity::class], version = 2, exportSchema = true)
+@Database(
+    entities = [NewsLocal::class, BookEntity::class, UserEntity::class],
+    version = 2,
+    exportSchema = true
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao
@@ -26,6 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
         private fun buildDatabase(appContext: Context) =
             Room.databaseBuilder(appContext, AppDatabase::class.java, DATABASE_NAME)
                 .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
                 .build()
     }
 

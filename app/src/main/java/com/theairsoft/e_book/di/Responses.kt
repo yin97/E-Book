@@ -8,7 +8,7 @@ data class NewsResponse(
     val status: String?,
     @SerializedName("num_results")
     val numResults: Int,
-    val results: ArrayList<NewsEmailedArticle>?
+    val results: List<NewsEmailedArticle>?
 ) {
     fun newsEntityList(): List<NewsLocal> {
         return results?.map { e -> e.toNewsEntity() } ?: arrayListOf()
@@ -29,13 +29,29 @@ data class NewsEmailedArticle(
     val abstract: String?,
     val media: List<NewsMedia>?
 ) {
+    private fun getImage():String{
+        return media?.let { media->
+            if (media.isNotEmpty()){
+                media[0].metadata?.let { meta->
+                    if (meta.isNotEmpty()){
+                        meta[0].url
+                    }else{
+                        ""
+                    }
+                }
+            }else{
+                ""
+            }
+        }.toString()
+    }
 
     fun toNewsEntity(): NewsLocal {
         return NewsLocal(
             id = id,
-            publishedDate = publishedDate,
+            publishedDate = publishedDate?:"",
             title = title,
-            subTitle = abstract
+            subTitle = abstract,
+            image = getImage()
         )
     }
 }

@@ -1,19 +1,16 @@
 package com.theairsoft.e_book.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.theairsoft.e_book.di.NewsEmailedArticle
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NewsDao {
     @Query("SELECT * FROM news_table")
-    fun getAllNews(): LiveData<List<NewsLocal>>
+    fun getAllNews(): Flow<List<NewsLocal>>
 
     @Query("SELECT * FROM news_table WHERE _id = :id")
-    fun getNews(id: Int): LiveData<NewsLocal>
+    fun getNews(id: Long): Flow<NewsLocal>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(news: List<NewsLocal>)
@@ -22,14 +19,22 @@ interface NewsDao {
     suspend fun insert(news: NewsLocal)
 
     @Query("SELECT * FROM book_table")
-    fun getAllBooks(): LiveData<List<BookEntity>>
+    fun getAllBooks(): Flow<List<BookEntity>>
 
     @Query("SELECT * FROM book_table WHERE _id = :id")
-    fun getBook(id: Int): LiveData<BookEntity>
+    fun getBook(id: Long): Flow<BookEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllBooks(news: List<BookEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBook(news: BookEntity)
+
+
+    @Insert
+    suspend fun insertUser(user: UserEntity)
+
+    @Query("SELECT * FROM user_table WHERE mobilePhone=:phone")
+    fun getUserByLogin(phone: String): UserEntity
+
+    @Query("SELECT * FROM user_table WHERE _id=:id")
+    fun getUserById(id:Int):UserEntity
 }

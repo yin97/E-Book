@@ -30,11 +30,11 @@
             app:layout_constraintTop_toBottomOf="@id/tv_bestseller" />
 
         <TextView
-            android:id="@+id/tv_genres"
+            android:id="@+id/tv_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="Genres"
+            android:text="News of New York Times"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -42,28 +42,11 @@
             app:layout_constraintTop_toBottomOf="@id/list_bestseller" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_genres"
+            android:id="@+id/list_news"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_genres" />
+            app:layout_constraintTop_toBottomOf="@id/tv_news" />
 
-        <TextView
-            android:id="@+id/tv_recently"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:text="Recently Viewed"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_genres" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_recently"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_recently" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -9,16 +9,24 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.theairsoft.e_book.*
 import com.theairsoft.e_book.database.UserEntity
 import com.theairsoft.e_book.databinding.FragmentSignUpBinding
+import com.theairsoft.e_book.di.NewsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlin.math.absoluteValue
+import kotlin.random.Random
 
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel:NewsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,21 +86,18 @@ class SignUpFragment : Fragment() {
         val name = binding.etFirst.text.toString()
 
         val user = UserEntity(
-            id = null,
+            id = Random.nextInt().absoluteValue,
             name = name,
             email = email,
             mobilePhone = phone,
             password = password
         )
 
-        CoroutineScope(Dispatchers.IO).launch {
-            (requireActivity() as StartActivity).let {
-                it.viewModel.apply {
+
+                viewModel.apply {
                     checkData(user, this@SignUpFragment)
                 }
-            }
 
-        }
     }
 
 

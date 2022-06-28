@@ -27,6 +27,7 @@ class BookData(
 
             Glide.with(itemView.context)
                 .load(item.image)
+                .placeholder(R.drawable.ic_baseline_image_24)
                 .into(binding.ivBook)
 
 

@@ -15,6 +15,8 @@ class SharedPrefs(context: Context) {
 
     val isNotFirstTime = get(FIRST_TIME, Boolean::class.java)
     fun setFirstTime(volume: Boolean) = put(FIRST_TIME, volume)
+    val userId = get(USER_ID,Int::class.java)
+    fun setUserId(userId:Int) = put(USER_ID,userId)
 
     private fun <T> get(key: String, clazz: Class<T>): T =
         when (clazz) {
