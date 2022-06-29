@@ -1,9 +1,11 @@
 package com.theairsoft.e_book.ui.home
 
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
+import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.theairsoft.e_book.DateHelper
 import com.theairsoft.e_book.R
 import com.theairsoft.e_book.databinding.ItemNewsBinding
@@ -24,7 +26,7 @@ class NewsItem(
         set(value) {}
 
     val messageDate: Date
-        get() = publishedDate?.let { DateHelper.str2Date(it, "yyyy-MM-dd") }?:Date()
+        get() = publishedDate?.let { DateHelper.str2Date(it, "yyyy-MM-dd") } ?: Date()
 
     val displayDate: String
         get() {
@@ -60,4 +62,28 @@ class NewsItem(
         get() = R.layout.item_news
 
     override fun getViewHolder(v: View): NewsViewHolder = NewsViewHolder(v)
+
+     class OnNewsItemClickEvent(private val listener: OnNewsItemClickListener) :
+        ClickEventHook<NewsItem>() {
+        override fun onClick(
+            v: View,
+            position: Int,
+            fastAdapter: FastAdapter<NewsItem>,
+            item: NewsItem
+        ) {
+            listener.onClick(item)
+        }
+
+        override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
+            return if (viewHolder is NewsItem.NewsViewHolder) {
+                viewHolder.itemView
+            } else {
+                super.onBind(viewHolder)
+            }
+        }
+    }
+}
+
+interface OnNewsItemClickListener {
+    fun onClick(item: NewsItem)
 }

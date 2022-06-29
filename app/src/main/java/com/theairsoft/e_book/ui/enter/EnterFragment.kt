@@ -20,8 +20,6 @@ class EnterFragment : Fragment() {
     private var _binding: FragmentEnterBinding? = null
     private val binding get() = _binding!!
 
-    private val vm: NewsViewModel by viewModels()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,8 +32,6 @@ class EnterFragment : Fragment() {
         binding.btnSignUp.setOnClickListener {
             findNavController().navigate(R.id.onboard_to_sign_up)
         }
-
-
 
         return binding.root
     }
