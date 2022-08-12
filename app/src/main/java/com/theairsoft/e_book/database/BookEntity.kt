@@ -16,6 +16,6 @@ data class BookEntity(
     val image:String?
 ){
     fun toBookData(): BookData {
-        return BookData(name = title, author = author, image = image)
+        return BookData(name = title, author = author, image = image,url = url)
     }
 }

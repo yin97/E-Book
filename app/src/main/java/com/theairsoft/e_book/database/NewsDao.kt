@@ -27,8 +27,6 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllBooks(news: List<BookEntity>)
 
-
-
     @Insert
     suspend fun insertUser(user: UserEntity)
 

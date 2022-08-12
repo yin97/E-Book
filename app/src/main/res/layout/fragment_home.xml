@@ -23,6 +23,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_my_book"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/button_background_book"
+            android:text="My Books"
+            android:layout_marginHorizontal="40dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/list_bestseller" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_bestseller"
             android:layout_width="match_parent"
@@ -39,7 +52,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_bestseller" />
+            app:layout_constraintTop_toBottomOf="@id/btn_my_book" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_news"

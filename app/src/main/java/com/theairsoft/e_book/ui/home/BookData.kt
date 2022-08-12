@@ -16,7 +16,8 @@ class BookData(
     val id: Int? = null,
     val name: String? = null,
     val author: String? = null,
-    val image: String? = null
+    val image: String? = null,
+    val url:String?=null
 ) : AbstractItem<BookData.BookViewHolder>() {
 
     override var identifier: Long

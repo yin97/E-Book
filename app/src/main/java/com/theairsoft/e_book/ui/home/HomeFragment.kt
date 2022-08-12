@@ -1,11 +1,11 @@
 package com.theairsoft.e_book.ui.home
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -15,11 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.theairsoft.e_book.*
 import com.theairsoft.e_book.databinding.FragmentHomeBinding
 import com.theairsoft.e_book.di.NewsViewModel
-import com.theairsoft.e_book.di.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,6 +50,10 @@ class HomeFragment : Fragment(), OnBookItemClickListener, OnNewsItemClickListene
         val root: View = binding.root
 
 
+        binding.btnMyBook.setOnClickListener {
+            startActivity(Intent(requireContext(), ShowPdfActivity::class.java))
+        }
+
         binding.listBestseller.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         fastItemAdapter.addEventHook(BookData.BookItemClickEvent(this))
@@ -83,8 +85,8 @@ class HomeFragment : Fragment(), OnBookItemClickListener, OnNewsItemClickListene
     }
 
     override fun onClickItem(item: BookData) {
-        val intent = Intent(requireContext(), PdfReaderActivity::class.java)
-        startActivity(intent)
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(item.url))
+        startActivity(browserIntent)
     }
 
     override fun onClick(item: NewsItem) {
