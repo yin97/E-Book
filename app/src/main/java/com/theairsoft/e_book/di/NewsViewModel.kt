@@ -16,6 +16,7 @@ import com.theairsoft.e_book.database.UserEntity
 import com.theairsoft.e_book.ui.home.BookData
 import com.theairsoft.e_book.ui.home.NewsItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -33,7 +34,7 @@ class NewsViewModel @Inject constructor(
     val user = MutableLiveData<UserEntity>()
 
     fun getNews(fragment: Fragment) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val progressDialog = fragment.getDialogProgressBar().create()
                 progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -68,7 +69,7 @@ class NewsViewModel @Inject constructor(
     }
 
     fun getBooks(fragment: Fragment) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val progressDialog = fragment.getDialogProgressBar().create()
                 progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -104,7 +105,7 @@ class NewsViewModel @Inject constructor(
     }
 
     fun getNews(fragment: Fragment, id: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val progressDialog = fragment.getDialogProgressBar().create()
                 progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -126,7 +127,7 @@ class NewsViewModel @Inject constructor(
     fun getUserByPhone(phone: String) = repository.getUserByPhone(phone)
 
     fun getUserById(fragment: Fragment, id: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 repository.getUserById(id).also { user ->
                     this@NewsViewModel.user.postValue(user)
@@ -138,7 +139,7 @@ class NewsViewModel @Inject constructor(
     }
 
     fun checkData(userData: UserEntity, fragment: Fragment) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 userData.mobilePhone?.let {
                     getUserByPhone(it).also { user ->
@@ -177,7 +178,7 @@ class NewsViewModel @Inject constructor(
     }
 
     private fun insertData(user: UserEntity, fragment: Fragment) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             insertUser(user).also {
                 fragment.showSnackbar("You are registered")
                 SharedPrefs(fragment.requireContext()).apply {
