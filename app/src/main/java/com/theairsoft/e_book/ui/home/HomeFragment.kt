@@ -2,6 +2,7 @@ package com.theairsoft.e_book.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.theairsoft.e_book.*
+import com.theairsoft.e_book.database.Offer
 import com.theairsoft.e_book.databinding.FragmentHomeBinding
 import com.theairsoft.e_book.di.NewsViewModel
 import com.theairsoft.e_book.di.Resource
@@ -76,12 +78,17 @@ class HomeFragment : Fragment() {
 
     private val viewModel: NewsViewModel by activityViewModels()
 
+
+    private val itemOfferAdapter = ItemAdapter<Offer>()
+    private val fastItemOfferAdapter =
+        FastAdapter.with(itemOfferAdapter)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.apply {
-            getBooks(this@HomeFragment)
-            getNews(this@HomeFragment)
-        }
+        viewModel.getBooks(this@HomeFragment)
+        viewModel.getNews(this@HomeFragment)
+
+        viewModel.getOffers()
     }
 
     override fun onCreateView(
@@ -99,10 +106,19 @@ class HomeFragment : Fragment() {
 
         val scale = resources.displayMetrics.density
         val marginPixels = (16 * scale + 0.5f).toInt()
-        binding.listNews.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.listNews.itemAnimator = DefaultItemAnimator()
-        binding.listNews.adapter = fastItemAdapterNews
-        binding.listNews.addItemDecoration(SpacesItemDecoration(marginPixels, true, 2))
+        binding.listNews.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            itemAnimator = DefaultItemAnimator()
+            adapter = fastItemAdapterNews
+            addItemDecoration(SpacesItemDecoration(marginPixels, true, 2))
+        }
+
+        binding.listOffer.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            itemAnimator = DefaultItemAnimator()
+            adapter = fastItemOfferAdapter
+            addItemDecoration(SpacesItemDecoration(marginPixels, true, 2))
+        }
 
         viewModel.books.observe(viewLifecycleOwner) { books ->
             itemAdapter.clear()
@@ -112,6 +128,13 @@ class HomeFragment : Fragment() {
         viewModel.news.observe(viewLifecycleOwner) { news ->
             itemAdapterNews.clear()
             itemAdapterNews.add(news)
+        }
+
+        viewModel.offers.observe(viewLifecycleOwner) {
+            itemOfferAdapter.clear()
+            if (it != null) {
+                itemOfferAdapter.add(it)
+            }
         }
         return root
     }

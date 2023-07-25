@@ -3,6 +3,7 @@ package com.theairsoft.e_book.di
 import com.google.gson.annotations.SerializedName
 import com.theairsoft.e_book.database.BookEntity
 import com.theairsoft.e_book.database.NewsLocal
+import com.theairsoft.e_book.database.Offer
 
 data class NewsResponse(
     val status: String?,
@@ -101,3 +102,8 @@ data class Books(
         return BookEntity(null, title, author, url,bookImage)
     }
 }
+
+data class OffersResponse(
+    @SerializedName("offers")
+    val offers:List<Offer>
+)

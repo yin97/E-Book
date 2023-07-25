@@ -27,6 +27,8 @@ class NewsRepository @Inject constructor(
         }
     )
 
+    suspend fun getOffers() = remoteDataSource.getOffers()
+
     fun getNews(id: Long) = localDataSource.getNews(id)
 
     suspend fun insertUser(user: UserEntity) = localDataSource.insertUser(user)

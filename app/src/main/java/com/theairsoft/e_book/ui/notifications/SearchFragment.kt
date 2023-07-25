@@ -40,9 +40,7 @@ class SearchFragment : Fragment() {
                 fastAdapter: FastAdapter<NewsItem>,
                 item: NewsItem
             ) {
-                val bundle = Bundle()
-                item.id?.let { bundle.putLong(NEWS_ID, it) }
-                findNavController().navigate(R.id.from_home_to_news_navigate, bundle)
+
             }
 
             override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {

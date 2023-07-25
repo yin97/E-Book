@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.theairsoft.e_book.*
 import com.theairsoft.e_book.database.BookEntity
 import com.theairsoft.e_book.database.NewsLocal
+import com.theairsoft.e_book.database.Offer
 import com.theairsoft.e_book.database.UserEntity
 import com.theairsoft.e_book.ui.home.BookData
 import com.theairsoft.e_book.ui.home.NewsItem
@@ -32,16 +33,30 @@ class NewsViewModel @Inject constructor(
     val new = MutableLiveData<NewsItem>()
     val news = MutableLiveData<List<NewsItem>>()
     val user = MutableLiveData<UserEntity>()
+    val offers = MutableLiveData<List<Offer>>()
+
+    fun getOffers() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getOffers().apply {
+                when (status) {
+                    Resource.Status.SUCCESS -> {
+                        offers.postValue(this.data?.offers)
+                    }
+
+                    else -> {
+
+                    }
+                }
+            }
+        }
+    }
 
     fun getNews(fragment: Fragment) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val progressDialog = fragment.getDialogProgressBar().create()
-                progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 repository.getNews().onEach { res ->
                     when (res.status) {
                         Resource.Status.SUCCESS -> {
-                            progressDialog.dismiss()
                             if (!res.data.isNullOrEmpty()) {
                                 val list = ArrayList(res.data)
                                 val news = ArrayList<NewsItem>()
@@ -53,12 +68,12 @@ class NewsViewModel @Inject constructor(
                                 this@NewsViewModel.news.postValue(news)
                             }
                         }
+
                         Resource.Status.ERROR -> {
                             res.message?.let { fragment.showSnackbar(it) }
                         }
 
                         Resource.Status.LOADING -> {
-                            progressDialog.show()
                         }
                     }
                 }.launchIn(viewModelScope)
@@ -71,12 +86,9 @@ class NewsViewModel @Inject constructor(
     fun getBooks(fragment: Fragment) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val progressDialog = fragment.getDialogProgressBar().create()
-                progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 repository.getBooks().onEach { res ->
                     when (res.status) {
                         Resource.Status.SUCCESS -> {
-                            progressDialog.dismiss()
                             if (!res.data.isNullOrEmpty()) {
                                 val list = ArrayList(res.data)
                                 val books = ArrayList<BookData>()
@@ -93,7 +105,6 @@ class NewsViewModel @Inject constructor(
                         }
 
                         Resource.Status.LOADING -> {
-                            progressDialog.show()
                         }
                     }
                 }.launchIn(viewModelScope)
@@ -107,9 +118,6 @@ class NewsViewModel @Inject constructor(
     fun getNews(fragment: Fragment, id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val progressDialog = fragment.getDialogProgressBar().create()
-                progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
                 repository.getNews(id).onEach { news ->
                     this@NewsViewModel.new.postValue(news.toNewsData())
                 }.launchIn(viewModelScope)

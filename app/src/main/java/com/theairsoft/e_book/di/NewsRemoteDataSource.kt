@@ -7,4 +7,6 @@ class NewsRemoteDataSource @Inject constructor(
 ) : BaseDataSource() {
     suspend fun getNews() = getResult { newsService.getNews("L1jc2m9EyGWbGAGgroNAGD8dHXwJATAX") }
     suspend fun getBooks() = getResult { newsService.getBooks() }
+
+    suspend fun getOffers() = getResult { newsService.getOffers("https://www.kattabozor.uz/hh/test/api/v1/offers") }
 }

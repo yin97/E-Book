@@ -3,6 +3,7 @@ package com.theairsoft.e_book.di
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface NewsService {
     @GET("mostpopular/v2/emailed/1.json")
@@ -10,4 +11,7 @@ interface NewsService {
 
     @GET("books/v3/lists/full-overview.json?api-key=L1jc2m9EyGWbGAGgroNAGD8dHXwJATAX")
     suspend fun getBooks():Response<BookResponse>
+
+    @GET
+    suspend fun getOffers(@Url url:String):Response<OffersResponse>
 }
